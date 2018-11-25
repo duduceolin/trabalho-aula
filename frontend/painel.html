@@ -2,34 +2,58 @@
 <head>
 <title> Meu painel </title>
 <link rel="stylesheet" type="text/css" href="css/panel.css">
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 </head>
 <body>
+
+  <script type='text/javascript'>
+
+
+  $(document).ready(function() {
+
+    $.ajaxSetup({
+      contentType: "application/json; charset=utf-8"
+    });
+
+    $("#nome").text("Bem-Vindo, " + sessionStorage.getItem("nome"));
+
+    $.ajax({
+                type: "get",
+                url: "http://localhost:8080/objetivos/",
+                headers: {
+                    user: sessionStorage.getItem("usuario")
+                },
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (obj) {
+                    if (obj != null) {
+                          var trHTML = '';
+                        $.each(obj, function (i, item) {
+                            trHTML += '<tr><td>' + item.descricao + '</td><td>' + item.valorEstipulado + '</td><td>' + item.valorInvestido + '</td><td>' + (item.valorEstipulado-item.valorInvestido) + '</td></tr>';
+                        });
+                        $('#tabela').append(trHTML);
+                    }
+                }
+            });
+
+    });
+  </script>
 <ul>
   <li><a href="painel.html">Meu painel</a></li>
   <li><a href="objetivos.html">Incluir objetivo</a></li>
   <li><a href="dinheiro.html">Inserir dinheiro</a></li>
 </ul>
-<div id="resumo"> 
-	<h3> Bem-Vindo, Fulano </h3>
+<div id="resumo">
+	<h3><div id="nome"></div> </h3>
 	<h2> Meus objetivos</h2>
 
-<table>
+<table id="tabela">
   <tr>
     <th>Objetivo</th>
+    <th>Total estipulado</th>
     <th>Total arrecadado</th>
     <th>Falta</th>
 	<!--<th>Add mais valor</th>-->
-  </tr>
-  <tr>
-    <td>Comprar um carro</td>
-    <td>R$ 1.000,00</td>
-    <td>R$ 2.500,00</td>
-	<!--<td><input id="add" type="submit" name="edit" value="+" /></td>-->
-  </tr>
-  <tr>
-    <td>Trocar de celular</td>
-    <td>R$ 250,00</td>
-    <td>R$ 1.869,23</td>
   </tr>
 
 </table>

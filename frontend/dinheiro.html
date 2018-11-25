@@ -3,34 +3,89 @@
 <title> Adicionar valor </title>
 <link rel="stylesheet" type="text/css" href="css/panel.css">
 <link rel="stylesheet" type="text/css" href="css/objetivo.css">
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 </head>
 <body>
+
+  <script type='text/javascript'>
+
+
+  $(document).ready(function() {
+
+    $.ajaxSetup({
+      contentType: "application/json; charset=utf-8"
+    });
+      /* attach a submit handler to the form */
+      $("#formoid").submit(function(event) {
+
+        /* stop form from submitting normally */
+        event.preventDefault();
+
+        /* get the action attribute from the <form action=""> element */
+
+        var body = {valorInvestido : $("#valor").val()};
+
+       $.ajax({
+        url: 'http://localhost:8080/objetivos/'+$('#objetivos').val()+'/actions/updateValue',
+        type: 'put',
+        contentType: 'application/json',
+        data: JSON.stringify(body),
+        headers: {
+            user: sessionStorage.getItem("usuario")
+        },
+        dataType: 'json',
+        success: function (data) {
+            alert('success');
+        }
+    });
+      });
+
+
+
+      $.ajax({
+                  type: "get",
+                  url: "http://localhost:8080/objetivos/",
+                  headers: {
+                      user: sessionStorage.getItem("usuario")
+                  },
+                  dataType: 'json',
+                  contentType: "application/json; charset=utf-8",
+                  success: function (obj) {
+                      if (obj != null) {
+                          var selectbox = $('#objetivos');
+                          selectbox.find('option').remove();
+                          $.each(obj, function (i, d) {
+                              $('<option>').val(d.id).text(d.descricao).appendTo(selectbox);
+                          });
+                      }
+                  }
+              });
+
+    });
+  </script>
 <ul>
   <li><a href="painel.html">Meu painel</a></li>
   <li><a href="objetivos.html">Incluir objetivo</a></li>
   <li><a href="dinheiro.html">Inserir dinheiro</a></li>
 </ul>
 
-<form method="post" action="teste.html">
+<form id="formoid" method="post" action="#">
 	<div class="box">
 	<div id="titulo"> <h1>Adicionar valor ao objetivo</h1> </div>
 
-	<input type="text" name="objetivo" placeholder="Valor a inserir" class="email" /> <br>
-	 
+	<input id="valor" type="text" name="objetivo" placeholder="Valor a inserir" class="email" /> <br>
 
-	<select name="objetivos" id="objetivo">
-    <option value="volvo">Selecione o objetivo</option>
-    <option value="saab">Viajar</option>
-    <option value="fiat">Trocar carro</option>
-    <option value="audi">Visitar a sogra</option>
-	</select>	
+
+	<select id="objetivos" name="objetivos" id="objetivo">
+    <option value="">Selecione o objetivo</option>
+	</select>
 	<br>
-	
-	<a href="#"><div class="btn">Inserir valor</div></a> 	
 
-	  
-	</div> 
-	  
+    <input class="btn"type="submit" id="submitButton"  name="submitButton" value="Incluir">
+
+
+	</div>
+
 	</form>
  <div id="rodape"> </div>
 </body>

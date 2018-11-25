@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class ObjetivoController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @CrossOrigin(origins = "*")
     @GetMapping(path = "objetivos")
     public ResponseEntity<List<ObjetivoDTO>> list(@RequestHeader("user") Integer userId) {
 
@@ -45,6 +47,7 @@ public class ObjetivoController {
                                                         }).collect(Collectors.toList()));
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping(path = "objetivos/{id}")
     public ResponseEntity<Objetivo> find(@RequestHeader("user") Integer user, @PathVariable("id") Integer id) {
 
@@ -58,8 +61,9 @@ public class ObjetivoController {
         return opt.isPresent() ? ResponseEntity.ok(opt.get()) : ResponseEntity.notFound().build();
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping(path = "objetivos")
-    public ResponseEntity<Objetivo> insert(@PathVariable("user") Integer userId, @RequestBody @Valid ObjetivoDTO objetivoDTO) {
+    public ResponseEntity<Objetivo> insert(@RequestHeader("user") Integer userId, @RequestBody @Valid ObjetivoDTO objetivoDTO) {
         Optional<Usuario> usuario = usuarioRepository.findById(userId);
         if (!usuario.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -68,12 +72,13 @@ public class ObjetivoController {
         Objetivo objetivo = new Objetivo();
         objetivo.setDescricao(objetivoDTO.getDescricao());
         objetivo.setValorEstipulado(objetivoDTO.getValorEstipulado());
-        objetivo.setValorInvestido(objetivoDTO.getValorInvestido());
+        objetivo.setValorInvestido(objetivoDTO.getValorInvestido() != null ? objetivoDTO.getValorInvestido() : BigDecimal.ZERO);
         objetivo.setUsuario(usuario.get());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(objetivoRepository.save(objetivo));
     }
 
+    @CrossOrigin(origins = "*")
     @PutMapping(path = "objetivos/{id}")
     public ResponseEntity<Objetivo> update(@RequestHeader("user") Integer userId, @PathVariable("id") Integer id, @RequestBody @Valid ObjetivoDTO objetivoDTO) {
 
@@ -102,6 +107,36 @@ public class ObjetivoController {
         }
     }
 
+    @CrossOrigin(origins = "*")
+    @PutMapping(path = "objetivos/{id}/actions/updateValue")
+    public ResponseEntity<Objetivo> updateValue(@RequestHeader("user") Integer userId, @PathVariable("id") Integer id, @RequestBody ObjetivoDTO objetivoDTO) {
+
+        Optional<Usuario> usuario = usuarioRepository.findById(userId);
+        if (!usuario.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Optional<Objetivo> objetivoOptional = objetivoRepository.findByIdAndUsuarioId(id, userId);
+
+        if (objetivoOptional.isPresent()) {
+            Objetivo objetivo = objetivoOptional.get();
+
+
+
+            if (objetivoDTO.getValorInvestido() != null){
+                BigDecimal newValue = objetivo.getValorInvestido();
+                newValue = newValue.add(objetivoDTO.getValorInvestido());
+
+                objetivo.setValorInvestido(newValue);
+            }
+
+            return ResponseEntity.ok(objetivoRepository.save(objetivo));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @CrossOrigin(origins = "*")
     @DeleteMapping(path = "objetivos/{id}")
     public ResponseEntity<Objetivo> delete(@RequestHeader("user") Integer user, @PathVariable("id") Integer id) {
 

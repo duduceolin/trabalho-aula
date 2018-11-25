@@ -3,23 +3,57 @@
 <title>  Controle de gastos - Cadastro </title>
 <link rel="stylesheet" type="text/css" href="css/style.css">
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 </head>
 <body>
-<form method="post" action="teste.html">
+	<script type='text/javascript'>
+
+
+	$(document).ready(function() {
+			/* attach a submit handler to the form */
+			$("#formoid").submit(function(event) {
+
+				$.ajaxSetup({
+				  contentType: "application/json; charset=utf-8"
+				});
+				/* stop form from submitting normally */
+				event.preventDefault();
+
+				/* get the action attribute from the <form action=""> element */
+				var $form = $( this ),
+						url = "http://localhost:8080/usuarios/"
+
+
+			  var body = { nome: $('#nome').val(), usuario: $('#usuario').val(), senha: $('#senha').val() };
+
+
+				/* Send the data using post with element id name and name2*/
+				var posting = $.post( url,  JSON.stringify(body));
+
+				console.log(posting);
+
+				/* Alerts the results */
+				posting.done(function( data ) {
+					alert('success');
+				});
+			});
+		});
+	</script>
+<form id="formoid" method="post" action="teste.html">
 	<div class="box">
 	<h1>Cadastro</h1>
 
-	<input type="text" name="nome" placeholder="Nome" class="email" />
-	
-	<input type="usuario" name="usuario" placeholder="Usuário" class="email" />
-	  
-	<input type="password" name="senha" placeholder="Senha" class="email" />
-	  
-	<a href="#"><div class="btn">Cadastrar</div></a> 	
+	<input id="nome" type="text" name="nome" placeholder="Nome" class="email" />
 
-	  
-	</div> 
-	  
+	<input id="usuario" type="usuario" name="usuario" placeholder="Usuário" class="email" />
+
+	<input id="senha" type="password" name="senha" placeholder="Senha" class="email" />
+
+	<input class="btn"type="submit" id="submitButton"  name="submitButton" value="Cadastrar">
+
+
+	</div>
+
 	</form>
 
 	<p>Já possui cadastro? <A href="index.html">Clique aqui para fazer login!</a></p>

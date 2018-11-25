@@ -1,6 +1,7 @@
 package trabalho.controller;
 
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import trabalho.dto.UsuarioDTO;
 import trabalho.entity.Usuario;
 import trabalho.repository.UsuarioRepository;
@@ -19,6 +20,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @CrossOrigin(origins = "*")
     @GetMapping(path = "/{userId}")
     public ResponseEntity<Usuario> find(@PathVariable("userId") Integer userId) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findById(userId);
@@ -29,8 +31,13 @@ public class UsuarioController {
         }
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping(path = "/")
     public ResponseEntity<Usuario> insert(@RequestBody @Valid UsuarioDTO usuarioDTO) {
+
+        if (usuarioRepository.findByUsuario(usuarioDTO.getUsuario()).isPresent())
+            return ResponseEntity.unprocessableEntity().build();
+
         Usuario usuario = new Usuario();
 
         usuario.setNome(usuarioDTO.getNome());
@@ -42,6 +49,7 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping(path = "/actions/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Usuario> login(@RequestBody @Valid UsuarioDTO usuarioDTO) {
         Optional<Usuario> usuario = Optional.ofNullable(usuarioRepository.findByUsuarioAndSenha(usuarioDTO.getUsuario(), usuarioDTO.getSenha()));
