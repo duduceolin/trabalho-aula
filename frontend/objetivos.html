@@ -34,7 +34,7 @@
         contentType: 'application/json',
         data: JSON.stringify(body),
         headers: {
-            user: sessionStorage.getItem("usuario")
+            token: sessionStorage.getItem("usuario")
         },
         dataType: 'json',
         success: function (data) {

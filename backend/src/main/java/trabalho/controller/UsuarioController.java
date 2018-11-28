@@ -1,15 +1,14 @@
 package trabalho.controller;
 
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-import trabalho.dto.UsuarioDTO;
-import trabalho.entity.Usuario;
-import trabalho.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import trabalho.dto.UsuarioDTO;
+import trabalho.entity.Usuario;
+import trabalho.repository.UsuarioRepository;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -22,7 +21,7 @@ public class UsuarioController {
 
     @CrossOrigin(origins = "*")
     @GetMapping(path = "/{userId}")
-    public ResponseEntity<Usuario> find(@PathVariable("userId") Integer userId) {
+    public ResponseEntity<Usuario> find(@PathVariable("userId") String userId) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findById(userId);
         if (usuarioOptional.isPresent()) {
             return ResponseEntity.ok(usuarioOptional.get());

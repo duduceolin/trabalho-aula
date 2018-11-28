@@ -31,12 +31,16 @@
 		      /* Alerts the results */
 		      posting.done(function( data ) {
 
-						console.log(data['id']);
 						sessionStorage.setItem("usuario", data['id']);
 						sessionStorage.setItem("nome", data['nome']);
-		        alert('success');
+		        alert('Sucesso!');
 						window.location.href = 'painel.html';
 		      });
+
+					posting.fail(function (data) {
+						alert('Erro ao acessar!');
+					});
+
 		    });
 			});
 		</script>

@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ObjetivoRepository extends CrudRepository<Objetivo, Integer> {
-    List<Objetivo> findByUsuarioId(Integer usuarioId);
 
-    Optional<Objetivo> findByIdAndUsuarioId(Integer id, Integer usuarioId);
+    List<Objetivo> findByUsuarioId(String usuarioId);
 
-    void deleteByIdAndUsuarioId(Integer id, Integer usuarioId);
+    Optional<Objetivo> findByIdAndUsuarioId(Integer id, String usuarioId);
+
+    void deleteByIdAndUsuarioId(Integer id, String usuarioId);
 }

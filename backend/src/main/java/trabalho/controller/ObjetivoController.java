@@ -29,7 +29,7 @@ public class ObjetivoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping(path = "objetivos")
-    public ResponseEntity<List<ObjetivoDTO>> list(@RequestHeader("user") Integer userId) {
+    public ResponseEntity<List<ObjetivoDTO>> list(@RequestHeader("token") String userId) {
 
         Optional<Usuario> usuario = usuarioRepository.findById(userId);
         if (!usuario.isPresent()) {
@@ -49,7 +49,7 @@ public class ObjetivoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping(path = "objetivos/{id}")
-    public ResponseEntity<Objetivo> find(@RequestHeader("user") Integer user, @PathVariable("id") Integer id) {
+    public ResponseEntity<Objetivo> find(@RequestHeader("token") String user, @PathVariable("id") Integer id) {
 
         Optional<Usuario> usuario = usuarioRepository.findById(user);
         if (!usuario.isPresent()) {
@@ -63,7 +63,7 @@ public class ObjetivoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping(path = "objetivos")
-    public ResponseEntity<Objetivo> insert(@RequestHeader("user") Integer userId, @RequestBody @Valid ObjetivoDTO objetivoDTO) {
+    public ResponseEntity<Objetivo> insert(@RequestHeader("token") String userId, @RequestBody @Valid ObjetivoDTO objetivoDTO) {
         Optional<Usuario> usuario = usuarioRepository.findById(userId);
         if (!usuario.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -80,7 +80,7 @@ public class ObjetivoController {
 
     @CrossOrigin(origins = "*")
     @PutMapping(path = "objetivos/{id}")
-    public ResponseEntity<Objetivo> update(@RequestHeader("user") Integer userId, @PathVariable("id") Integer id, @RequestBody @Valid ObjetivoDTO objetivoDTO) {
+    public ResponseEntity<Objetivo> update(@RequestHeader("token") String userId, @PathVariable("id") Integer id, @RequestBody @Valid ObjetivoDTO objetivoDTO) {
 
         Optional<Usuario> usuario = usuarioRepository.findById(userId);
         if (!usuario.isPresent()) {
@@ -109,7 +109,7 @@ public class ObjetivoController {
 
     @CrossOrigin(origins = "*")
     @PutMapping(path = "objetivos/{id}/actions/updateValue")
-    public ResponseEntity<Objetivo> updateValue(@RequestHeader("user") Integer userId, @PathVariable("id") Integer id, @RequestBody ObjetivoDTO objetivoDTO) {
+    public ResponseEntity<Objetivo> updateValue(@RequestHeader("token") String userId, @PathVariable("id") Integer id, @RequestBody ObjetivoDTO objetivoDTO) {
 
         Optional<Usuario> usuario = usuarioRepository.findById(userId);
         if (!usuario.isPresent()) {
@@ -120,8 +120,6 @@ public class ObjetivoController {
 
         if (objetivoOptional.isPresent()) {
             Objetivo objetivo = objetivoOptional.get();
-
-
 
             if (objetivoDTO.getValorInvestido() != null){
                 BigDecimal newValue = objetivo.getValorInvestido();
@@ -138,7 +136,7 @@ public class ObjetivoController {
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(path = "objetivos/{id}")
-    public ResponseEntity<Objetivo> delete(@RequestHeader("user") Integer user, @PathVariable("id") Integer id) {
+    public ResponseEntity<Objetivo> delete(@RequestHeader("token") String user, @PathVariable("id") Integer id) {
 
         objetivoRepository.deleteByIdAndUsuarioId(id, user);
 

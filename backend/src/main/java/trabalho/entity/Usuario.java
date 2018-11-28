@@ -1,13 +1,16 @@
 package trabalho.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 
 @Entity
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    @GenericGenerator(name = "sequence", strategy = "trabalho.utils.IdGenerator")
+    @GeneratedValue(generator = "sequence")
+    private String id;
 
     @Column(unique = true)
     private String usuario;
@@ -18,11 +21,11 @@ public class Usuario {
     @Column(nullable = false)
     private String nome;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

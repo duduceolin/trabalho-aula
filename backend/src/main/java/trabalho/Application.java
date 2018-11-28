@@ -10,10 +10,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @SpringBootApplication
 @EntityScan("trabalho.*")
-public class JuliusApplication {
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(JuliusApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 	@Bean

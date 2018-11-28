@@ -31,7 +31,7 @@
         contentType: 'application/json',
         data: JSON.stringify(body),
         headers: {
-            user: sessionStorage.getItem("usuario")
+            token: sessionStorage.getItem("usuario")
         },
         dataType: 'json',
         success: function (data) {
@@ -46,7 +46,7 @@
                   type: "get",
                   url: "http://localhost:8080/objetivos/",
                   headers: {
-                      user: sessionStorage.getItem("usuario")
+                      token: sessionStorage.getItem("usuario")
                   },
                   dataType: 'json',
                   contentType: "application/json; charset=utf-8",
